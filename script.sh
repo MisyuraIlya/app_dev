@@ -130,3 +130,124 @@ echo "IS_ONLINE_MIGVAN=${IS_ONLINE_MIGVAN}" >> ${FOLDER}_backend/.env
 
 # Display a message indicating that the script has run
 echo "Environment variables initialized."
+
+echo version: '3' >> docker-compose.yml
+
+echo networks: >> docker-compose.yml
+echo   nginx-php81-mysql8-node: >> docker-compose.yml
+
+echo services: >> docker-compose.yml
+echo  # nginx >> docker-compose.yml
+echo  nginx-service: >> docker-compose.yml
+echo    image: nginx:stable-alpine >> docker-compose.yml
+echo    container_name: nginx-container >> docker-compose.yml
+echo    ports: >> docker-compose.yml
+echo      - '8080:80' >> docker-compose.yml
+echo    volumes: >> docker-compose.yml
+echo      - ./${FOLDER}_front:/var/www/project >> docker-compose.yml
+echo      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf >> docker-compose.yml
+echo    depends_on: >> docker-compose.yml
+echo      - php81-service >> docker-compose.yml
+echo      - mysql8-service >> docker-compose.yml
+echo    networks: >> docker-compose.yml
+echo      - nginx-php81-mysql8-node >> docker-compose.yml
+
+echo  # php >> docker-compose.yml
+echo  php81-service: >> docker-compose.yml
+echo    build: >> docker-compose.yml
+echo      context: . >> docker-compose.yml
+echo      dockerfile: ./php/Dockerfile >> docker-compose.yml
+echo    container_name: php81-container >> docker-compose.yml
+echo    ports: >> docker-compose.yml
+echo      - '9000:9000' >> docker-compose.yml
+echo    volumes: >> docker-compose.yml
+echo      - ./${FOLDER}_backend:/var/www/project >> docker-compose.yml
+echo    networks: >> docker-compose.yml
+echo      - nginx-php81-mysql8-node >> docker-compose.yml
+
+echo  # mysql >> docker-compose.yml
+echo  mysql8-service: >> docker-compose.yml
+echo    image: mysql:8 >> docker-compose.yml
+echo    container_name: mysql8-container >> docker-compose.yml
+echo    ports: >> docker-compose.yml
+echo      - '4306:3306' >> docker-compose.yml
+echo    volumes: >> docker-compose.yml
+echo      - ./mysql:/var/lib/mysql >> docker-compose.yml
+echo    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci >> docker-compose.yml
+echo    restart: always # always restart unless stopped manually >> docker-compose.yml
+echo    environment: >> docker-compose.yml
+echo      MYSQL_ROOT_PASSWORD: secret >> docker-compose.yml
+echo      MYSQL_PASSWORD: secret >> docker-compose.yml
+echo    networks: >> docker-compose.yml
+echo      - nginx-php81-mysql8-node >> docker-compose.yml
+
+echo  # react app >> docker-compose.yml
+echo  react-app-service: >> docker-compose.yml
+echo    build: >> docker-compose.yml 
+echo      context: . >> docker-compose.yml
+echo      dockerfile: ./${FOLDER}_front/Dockerfile >> docker-compose.yml
+echo    container_name: react-app-container >> docker-compose.yml
+echo    ports: >> docker-compose.yml
+echo      - '3000:3000' >> docker-compose.yml
+echo    volumes: >> docker-compose.yml
+echo      - ./${FOLDER}_front:/var/www/${FOLDER} >> docker-compose.yml
+echo    working_dir: /var/www/${FOLDER} >> docker-compose.yml
+
+echo "version: '3'" > docker-compose.yml
+echo " "  >> docker-compose.yml
+echo "networks:" >> docker-compose.yml
+echo "  nginx-php81-mysql8-node:" >> docker-compose.yml
+echo " " >> docker-compose.yml
+echo "services:" >> docker-compose.yml
+echo " " >> docker-compose.yml
+echo "  nginx-service:" >> docker-compose.yml
+echo "    image: nginx:stable-alpine" >> docker-compose.yml
+echo "    container_name: nginx-container-${FOLDER}" >> docker-compose.yml
+echo "    ports:" >> docker-compose.yml
+echo "      - '8080:80'" >> docker-compose.yml
+echo "    volumes:" >> docker-compose.yml
+echo "      - ./${FOLDER}_backend:/var/www/project" >> docker-compose.yml
+echo "      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf" >> docker-compose.yml
+echo "    depends_on:" >> docker-compose.yml
+echo "      - php81-service" >> docker-compose.yml
+echo "      - mysql8-service" >> docker-compose.yml
+echo "    networks:" >> docker-compose.yml
+echo "      - nginx-php81-mysql8-node" >> docker-compose.yml
+echo " " >> docker-compose.yml
+echo "  php81-service:" >> docker-compose.yml
+echo "    build:" >> docker-compose.yml
+echo "      context: ." >> docker-compose.yml
+echo "      dockerfile: ./php/Dockerfile" >> docker-compose.yml
+echo "    container_name: php81-container-${FOLDER}" >> docker-compose.yml
+echo "    ports:" >> docker-compose.yml
+echo "      - '9000:9000'" >> docker-compose.yml
+echo "    volumes:" >> docker-compose.yml
+echo "      - ./${FOLDER}_backend:/var/www/project" >> docker-compose.yml
+echo "    networks:" >> docker-compose.yml
+echo "      - nginx-php81-mysql8-node" >> docker-compose.yml
+echo " " >> docker-compose.yml
+echo "  mysql8-service:" >> docker-compose.yml
+echo "    image: mysql:8" >> docker-compose.yml
+echo "    container_name: mysql8-container-${FOLDER}" >> docker-compose.yml
+echo "    ports:" >> docker-compose.yml
+echo "      - '4306:3306'" >> docker-compose.yml
+echo "    volumes:" >> docker-compose.yml
+echo "      - ./mysql:/var/lib/mysql" >> docker-compose.yml
+echo "    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci" >> docker-compose.yml
+echo "    restart: always" >> docker-compose.yml
+echo "    environment:" >> docker-compose.yml
+echo "      MYSQL_ROOT_PASSWORD: secret" >> docker-compose.yml
+echo "      MYSQL_PASSWORD: secret" >> docker-compose.yml
+echo "    networks:" >> docker-compose.yml
+echo "      - nginx-php81-mysql8-node" >> docker-compose.yml
+echo " " >> docker-compose.yml
+echo "  react-app-service:" >> docker-compose.yml
+echo "    build:" >> docker-compose.yml 
+echo "      context: ." >> docker-compose.yml
+echo "      dockerfile: ./${FOLDER}_front/Dockerfile" >> docker-compose.yml
+echo "    container_name: react-app-container-${FOLDER}" >> docker-compose.yml
+echo "    ports:" >> docker-compose.yml
+echo "      - '3000:3000'" >> docker-compose.yml
+echo "    volumes:" >> docker-compose.yml
+echo "      - ./${FOLDER}_front:/var/www/react-app" >> docker-compose.yml
+echo "    working_dir: /var/www/react-app" >> docker-compose.yml
